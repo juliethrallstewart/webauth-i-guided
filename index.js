@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const restricted = require('./auth/restricted-middleware')
 
 const db = require('./database/dbConfig.js');
 const Users = require('./users/users-model.js');
@@ -47,7 +48,7 @@ server.post('/api/register', (req, res) => {
 //     });
 // });
 
-server.post('/api/login', validateUser, (req, res) => {
+server.post('/api/login', restricted, (req, res) => {
   let { username, password } = req.body;
   // check password
   Users.findBy({username})
@@ -86,18 +87,18 @@ server.listen(port, () => console.log(`\n** Running on port ${port} **\n`));
 
   Use the middleware to restrict access to the GET /api/users endpoint*/
 
-  function validateUser (req, res, next) {
-    const { username, password } = req.body
+  // function validateUser (req, res, next) {
+  //   const { username, password } = req.body
 
-    Users.findBy({username})
-    .first()
-    .then(user => {
-      if (user && bcrypt.compareSync(password, user.password)
-      ) {
-        next()
-      } else {
-        res.status(401).json({ message: 'Invalid Credentials' });
-      }
-    })
-  }
+  //   Users.findBy({username})
+  //   .first()
+  //   .then(user => {
+  //     if (user && bcrypt.compareSync(password, user.password)
+  //     ) {
+  //       next()
+  //     } else {
+  //       res.status(401).json({ message: 'Invalid Credentials' });
+  //     }
+  //   })
+  // }
 
