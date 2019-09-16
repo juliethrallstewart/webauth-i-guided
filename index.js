@@ -58,7 +58,7 @@ server.get('/hash', (req, res) => {
   const name = req.query.name;
   // hash the name
   const userPassword = name
-  const hash = bcrypt.hash(userPassword, salt)
+  const hash = bcrypt.hash(userPassword)
   res.send(`the hash for ${name} is ${hash}`);
 });
 
